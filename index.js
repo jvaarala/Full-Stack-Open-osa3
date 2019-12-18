@@ -1,15 +1,15 @@
 console.log('Starting server...')
 
+const morgan = require('morgan')
 const express = require('express')
 const bodyParser = require('body-parser')
-const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
-app.use(bodyParser.json())
-
 
 morgan.token('post', function (req) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post'))
+app.use(express.static('build'))
+app.use(bodyParser.json())
 app.use(cors())
 
 
