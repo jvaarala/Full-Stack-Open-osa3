@@ -94,7 +94,6 @@ app.put('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error))
 })
 
-
 const generateId = () => {
     return Math.floor(Math.random() * Math.pow(2, 64));
 }
