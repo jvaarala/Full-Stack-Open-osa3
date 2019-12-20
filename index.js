@@ -78,7 +78,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     }).catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (req, res, next) => {
+app.put('/api/persons/:id', (req, res) => {
   const body = req.body
 
   const person = {
@@ -90,7 +90,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     .then(updatedPerson => {
       res.json(updatedPerson.toJSON())
     })
-    .catch(error => next(error))
+    .catch(() => res.status(404).send({ error: 'Unknown endpoint' }))
 })
 
 app.post('/api/persons', (req, res, next) => {
