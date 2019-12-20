@@ -81,9 +81,6 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 app.put('/api/persons/:id', (req, res, next) => {
     const body = req.body
-    if (body.number === "") {
-        return res.status(400).json({error: 'No number to update with'})
-    }
 
     const person = {
         name: body.name,
@@ -105,16 +102,12 @@ const generateId = () => {
 app.post('/api/persons', (req, res, next) => {
     const body = req.body
 
-    if (body.name === undefined || body.number === undefined) {
-        return res.status(400).json({error: 'Content missing'})
-    }
-
     const person = new Person({
         name: body.name,
         number: body.number,
     })
 
-    console.log('POST: ', person)
+    console.log('Attempt to POST: ', person)
 
     person.save().then(savedPerson => {
         res.json(savedPerson.toJSON())
@@ -127,10 +120,12 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
-    console.log(error.message)
+    console.log('Catched by errorhandler:\n' + error.message)
 
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
-        return response.status(400).send({error: 'malformatted id'})
+        return res.status(400).send({error: 'malformatted id'})
+    } else if (error.name === 'ValidationError') {
+        return res.status(400).json({error: error.message})
     }
 
     next(error)
